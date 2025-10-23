@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  x-to-nostr-bot:
+    build: .
+    container_name: x-to-nostr-bot
+    restart: unless-stopped
+    environment:
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - TWITTER_USERNAME=${TWITTER_USERNAME}
+      - NOSTR_PRIVATE_KEY=${NOSTR_PRIVATE_KEY}
+      - NOSTR_RELAYS=${NOSTR_RELAYS:-}
+      - CRON_SCHEDULE=${CRON_SCHEDULE:-*/10 * * * *}
+      - DB_PATH=/app/db/bot.db
+    volumes:
+      - bot_data:/app/db
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  bot_data:
+    driver: local

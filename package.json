@@ -1,0 +1,41 @@
+{
+  "name": "x-to-nostr-bot",
+  "version": "1.0.0",
+  "description": "Twitter to Nostr bot that monitors a Twitter account and posts new tweets to Nostr",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "docker:build": "docker build -t x-to-nostr-bot .",
+    "docker:export:amd64": "docker buildx build --platform linux/amd64 -t x-to-nostr-bot:amd64 --load . && docker save x-to-nostr-bot:amd64 | gzip > x-to-nostr-bot-amd64.tar.gz",
+    "docker:run": "docker-compose up -d"
+  },
+  "keywords": [
+    "twitter",
+    "nostr",
+    "bot",
+    "social-media",
+    "bridge"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "dotenv": "^17.2.3",
+    "fs-extra": "^11.2.0",
+    "node-cron": "^4.2.1",
+    "nostr-tools": "^2.17.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.9.1",
+    "@types/node-cron": "^3.0.11",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
