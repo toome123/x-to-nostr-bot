@@ -10,7 +10,11 @@
     "start": "node dist/index.js",
     "docker:build": "docker build -t x-to-nostr-bot .",
     "docker:export:amd64": "docker buildx build --platform linux/amd64 -t x-to-nostr-bot:amd64 --load . && docker save x-to-nostr-bot:amd64 | gzip > x-to-nostr-bot-amd64.tar.gz",
-    "docker:run": "docker-compose up -d"
+    "docker:run": "docker-compose up -d",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio"
   },
   "keywords": [
     "twitter",
@@ -22,15 +26,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "better-sqlite3": "^12.4.1",
+    "@prisma/client": "^6.18.0",
     "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
     "node-cron": "^4.2.1",
     "nostr-tools": "^2.17.0",
+    "prisma": "^6.18.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.9.1",
     "@types/node-cron": "^3.0.11",

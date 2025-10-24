@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Posts table - stores information about posted tweets
+model Post {
+  id        Int      @id @default(autoincrement())
+  tweetId   String   @unique @map("tweet_id")
+  tweetUrl  String   @map("tweet_url")
+  postedAt  DateTime @map("posted_at") @default(now())
+  createdAt DateTime @map("created_at") @default(now())
+
+  @@map("posts")
+  @@index([tweetId])
+  @@index([createdAt])
+}
+
+// App state table - stores application state key-value pairs
+model AppState {
+  key   String @id
+  value String
+
+  @@map("app_state")
+}
+
+// Twitter users table - caches Twitter user information
+model TwitterUser {
+  username String   @id
+  userId   String   @map("user_id")
+  cachedAt DateTime @map("cached_at") @default(now())
+
+  @@map("twitter_users")
+}
+
+// Rate limits table - tracks API rate limits
+model RateLimit {
+  endpoint  String   @id
+  resetAt   Int      @map("reset_at")
+  updatedAt DateTime @map("updated_at") @default(now())
+
+  @@map("rate_limits")
+}
