@@ -11,7 +11,7 @@ services:
       - NOSTR_PRIVATE_KEY=${NOSTR_PRIVATE_KEY}
       - NOSTR_RELAYS=${NOSTR_RELAYS:-}
       - CRON_SCHEDULE=${CRON_SCHEDULE:-*/10 * * * *}
-      - DB_PATH=/app/db/bot.db
+      - DB_PATH=/app/db/database.db
     volumes:
       - bot_data:/app/db
     healthcheck:

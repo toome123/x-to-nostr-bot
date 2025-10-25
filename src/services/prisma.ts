@@ -1,5 +1,5 @@
 import { PrismaClient } from '../generated/prisma/client.js'
-import { DatabasePost, AppState } from '../types/index.js'
+import { DatabasePost, Tweet } from '../types/index.js'
 
 export class PrismaService {
   private prisma: PrismaClient
@@ -8,16 +8,19 @@ export class PrismaService {
     this.prisma = new PrismaClient()
   }
 
-  async saveTweetId(tweetId: string, tweetUrl: string): Promise<void> {
+  async saveTweet(tweet: Tweet): Promise<void> {
     await this.prisma.post.upsert({
-      where: { tweetId },
+      where: { tweetId: tweet.id },
       update: {
-        tweetUrl,
         postedAt: new Date(),
       },
       create: {
-        tweetId,
-        tweetUrl,
+        tweetId: tweet.id,
+        tweetUrl: tweet.url,
+        mediaUrls: tweet.media_urls?.join(',') || '',
+        hashtags: tweet.hashtags?.join(',') || '',
+        mentions: tweet.mentions?.join(',') || '',
+        links: tweet.links?.join(',') || '',
         postedAt: new Date(),
         createdAt: new Date(),
       },

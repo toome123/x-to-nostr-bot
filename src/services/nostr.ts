@@ -42,7 +42,7 @@ export class NostrService {
       // Create a new pool for this operation
       pool = new SimplePool({ enablePing: true })
 
-      const content = this.formatTweetForNostr(tweet)
+      const content = tweet.text;
 
       // Create the event template
       const eventTemplate = {
@@ -74,22 +74,6 @@ export class NostrService {
     }
   }
 
-  private formatTweetForNostr(tweet: Tweet): string {
-    let content = tweet.text
-
-    // Add media URLs if present
-    if (tweet.media_urls && tweet.media_urls.length > 0) {
-      content += '\n\n' + tweet.media_urls.join('\n')
-    }
-
-    // Add original tweet URL if enabled
-    if (this.showTweetUrl) {
-      content += `\n\n🔗 ${tweet.url}`
-    }
-
-    return content
-  }
-
   private buildTags(tweet: Tweet): string[][] {
     const tags: string[][] = []
 
@@ -100,14 +84,6 @@ export class NostrService {
       })
     }
 
-    // Add mentions as p tags (if we had their pubkeys)
-    if (tweet.mentions) {
-      tweet.mentions.forEach(mention => {
-        // Note: In a real implementation, you'd want to resolve mentions to pubkeys
-        tags.push(['p', mention])
-      })
-    }
-
     // Add links as r tags
     if (tweet.links) {
       tweet.links.forEach(link => {
@@ -115,8 +91,19 @@ export class NostrService {
       })
     }
 
-    // Add original tweet URL as r tag
-    tags.push(['r', tweet.url])
+    if (this.showTweetUrl) {
+      // Add original tweet URL as r tag
+      tags.push(['r', tweet.url])
+    }
+
+    if (tweet.media_urls) {
+      tweet.media_urls.forEach(mediaUrl => {
+        const mediaType = mediaUrl.split('.').pop()?.toLowerCase()
+        if (mediaType) {
+          tags.push(['image', mediaUrl, `image/${mediaType}`])
+        }
+      })
+    }
 
     return tags
   }

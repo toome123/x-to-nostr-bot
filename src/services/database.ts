@@ -1,5 +1,5 @@
 import { PrismaService } from './prisma.js'
-import { DatabasePost, AppState } from '../types/index.js'
+import { DatabasePost, AppState, Tweet } from '../types/index.js'
 
 export class DatabaseService {
   private prismaService: PrismaService
@@ -9,8 +9,8 @@ export class DatabaseService {
     this.prismaService = new PrismaService()
   }
 
-  async saveTweetId(tweetId: string, tweetUrl: string): Promise<void> {
-    return this.prismaService.saveTweetId(tweetId, tweetUrl)
+  async saveTweet(tweet: Tweet): Promise<void> {
+    return this.prismaService.saveTweet(tweet)
   }
 
   async isTweetPosted(tweetId: string): Promise<boolean> {
