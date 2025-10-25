@@ -20,15 +20,15 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+RUN npm run db:generate
+
 # Build the application
 RUN npm run build
 
 # Remove dev dependencies and source code
 RUN npm ci --only=production && \
-    rm -rf src tsconfig.json vite.config.ts package-lock.json
+    rm -rf src tsconfig.json package-lock.json
 
-# Create directory for database
-RUN mkdir -p /app/db
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \

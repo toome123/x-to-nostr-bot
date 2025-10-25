@@ -97,7 +97,7 @@ class TwitterToNostrBot {
       
       if (success) {
         // Save to database
-        await this.database.saveTweetId(tweet.id, tweet.url)
+        await this.database.saveTweet(tweet)
         // Update start date to current time to avoid reprocessing this tweet
         await this.database.updateStartDateToNow()
         console.log(`✅ Successfully posted tweet ${tweet.id} to Nostr`)

@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   x-to-nostr-bot:
@@ -11,7 +10,7 @@ services:
       - NOSTR_PRIVATE_KEY=${NOSTR_PRIVATE_KEY}
       - NOSTR_RELAYS=${NOSTR_RELAYS:-}
       - CRON_SCHEDULE=${CRON_SCHEDULE:-*/10 * * * *}
-      - DB_PATH=/app/db/bot.db
+      - DATABASE_URL=file:/app/db/database.db
     volumes:
       - bot_data:/app/db
     healthcheck:
