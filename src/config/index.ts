@@ -17,7 +17,7 @@ export function loadConfig(): Config {
   const nostrRelays = process.env.NOSTR_RELAYS
   const cronSchedule = process.env.CRON_SCHEDULE || '*/10 * * * *'
   const dbPath = process.env.DB_PATH || './db/bot.db'
-  const showTweetUrl = process.env.SHOW_TWEET_URL !== 'false' || true
+  const showTweetUrl = process.env.SHOW_TWEET_URL !== 'false' || false
 
   if (!twitterBearerToken) {
     throw new Error('TWITTER_BEARER_TOKEN is required')

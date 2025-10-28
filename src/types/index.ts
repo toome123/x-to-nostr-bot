@@ -5,7 +5,6 @@ export interface Tweet {
   url: string
   media_urls?: string[]
   hashtags?: string[]
-  mentions?: string[]
   links?: string[]
 }
 

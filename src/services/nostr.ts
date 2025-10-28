@@ -51,13 +51,15 @@ export class NostrService {
         tags: this.buildTags(tweet),
         created_at: Math.floor(Date.now() / 1000)
       }
-
+      console.log('eventTemplate', eventTemplate);
       // Sign the event with the private key
       const signedEvent = finalizeEvent(eventTemplate, this.privateKey)
-
+      console.log('signedEvent', signedEvent);
       // Publish to all relays using SimplePool with proper error handling
-      const publishPromises = pool.publish(this.relays, signedEvent)
-
+      // const publishPromises = pool.publish(this.relays, signedEvent)
+      const publishPromises = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(true), 10000)
+      })
       // Wait for at least one relay to confirm with timeout
       await Promise.race([
         publishPromises,

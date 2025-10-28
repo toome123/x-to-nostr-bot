@@ -10,9 +10,9 @@ services:
       - NOSTR_PRIVATE_KEY=${NOSTR_PRIVATE_KEY}
       - NOSTR_RELAYS=${NOSTR_RELAYS:-}
       - CRON_SCHEDULE=${CRON_SCHEDULE:-*/10 * * * *}
-      - DATABASE_URL=file:/app/db/database.db
+      - DATABASE_URL=file:./db/database.db
     volumes:
-      - bot_data:/app/db
+      - bot_data:/app/prisma/db
     healthcheck:
       test: ["CMD", "node", "-e", "console.log('Health check')"]
       interval: 30s

@@ -70,22 +70,26 @@ class TwitterToNostrBot {
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       )
 
-      for (const tweet of sortedTweets) {
-        await this.processTweet(tweet)
-      }
+      const results = await Promise.all(sortedTweets.map(async (tweet) => {
+        return await this.processTweet(tweet);
+      }));
 
+      if(results.every(p => !p)){
+        console.log('❌ No tweets were posted, updating start date to now');
+        await this.database.updateStartDateToNow()
+      }
     } catch (error) {
       console.error('❌ Error processing tweets:', error)
     }
   }
 
-  private async processTweet(tweet: Tweet): Promise<void> {
+  private async processTweet(tweet: Tweet): Promise<boolean> {
     try {
       // Check if tweet was already posted
       const alreadyPosted = await this.database.isTweetPosted(tweet.id)
       if (alreadyPosted) {
         console.log(`⏭️  Tweet ${tweet.id} already posted, skipping`)
-        return
+        return false;
       }
 
       console.log(`📝 Processing tweet: ${tweet.id}`)
@@ -99,14 +103,17 @@ class TwitterToNostrBot {
         // Save to database
         await this.database.saveTweet(tweet)
         // Update start date to current time to avoid reprocessing this tweet
-        await this.database.updateStartDateToNow()
+        await this.database.updateStartDateToNow();
         console.log(`✅ Successfully posted tweet ${tweet.id} to Nostr`)
+        return true;
       } else {
-        console.log(`❌ Failed to post tweet ${tweet.id} to Nostr after retries`)
+        console.log(`❌ Failed to post tweet ${tweet.id} to Nostr after retries`);
+        return false;
       }
 
     } catch (error) {
       console.error(`❌ Error processing tweet ${tweet.id}:`, error)
+      return false;
     }
   }
 
@@ -116,6 +123,7 @@ class TwitterToNostrBot {
     this.cronJob = cron.schedule(this.config.cron.schedule, async () => {
       await this.processTweets()
     })
+    this.processTweets();
   }
 
   stop(): void {

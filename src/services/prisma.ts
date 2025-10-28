@@ -17,9 +17,9 @@ export class PrismaService {
       create: {
         tweetId: tweet.id,
         tweetUrl: tweet.url,
+        text: tweet.text,
         mediaUrls: tweet.media_urls?.join(',') || '',
         hashtags: tweet.hashtags?.join(',') || '',
-        mentions: tweet.mentions?.join(',') || '',
         links: tweet.links?.join(',') || '',
         postedAt: new Date(),
         createdAt: new Date(),
