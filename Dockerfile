@@ -1,5 +1,4 @@
-# Use Alpine-based Node.js image
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 # Install build dependencies for better-sqlite3
 RUN apk add --no-cache \
@@ -8,27 +7,34 @@ RUN apk add --no-cache \
     g++ \
     sqlite
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy only manifest first for better layer caching
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install all dependencies (dev + prod)
 RUN npm ci
 
 # Copy source code
 COPY . .
 
-RUN npm run db:generate
+# Generate Prisma client and build the app
+RUN npm run db:generate && npm run build
 
-# Build the application
-RUN npm run build
 
-# Remove dev dependencies and source code
-RUN npm ci --only=production && \
-    rm -rf src tsconfig.json package-lock.json
+FROM node:20-alpine AS runner
 
+# Runtime dependency for better-sqlite3
+RUN apk add --no-cache sqlite
+
+WORKDIR /app
+
+# Copy manifests and install only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy built artifacts from builder
+COPY --from=builder /app/dist/ /app/dist/
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
