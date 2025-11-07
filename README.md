@@ -12,7 +12,7 @@ A Node.js application that monitors a Twitter account and automatically posts ne
 - 📊 Preserves hashtags, mentions, links, and media from tweets
 - ⚡ Rate limiting protection with automatic retry
 - 🔄 User ID caching for improved performance
-- 🎯 Excludes replies and retweets (original tweets only)
+- 🎯 Excludes replies (includes original tweets, quotes, and retweets)
 - 🔗 Optional tweet URL display in Nostr posts
 - 🛡️ Graceful shutdown handling
 

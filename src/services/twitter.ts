@@ -115,7 +115,7 @@ export class TwitterService {
         'expansions': 'attachments.media_keys',
         'start_time': sinceDate,
         'max_results': '100',
-        'exclude': 'replies,retweets'  // Only get original tweets
+        'exclude': 'replies'  // Allow original tweets, quotes, and retweets
       })
 
       // Fetch tweets from the user
